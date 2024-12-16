@@ -12,7 +12,9 @@ public interface CustomerService {
 
 	public Customer customerLogin(String customerPhoneNumber, String customerSessionId);
 
-	public String sendOtp(OtpDetails otpDetails);
+	public String verifyOtp(OtpDetails otpDetails);
+	
+	public String resendOtp(String customerPhoneNumber, String customerSessionId);
 
 	public Customer saveProfile(Customer customer);
 	

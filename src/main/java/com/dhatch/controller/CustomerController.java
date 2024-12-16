@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dhatch.dto.OtpDetails;
 import com.dhatch.entity.Customer;
 import com.dhatch.service.CustomerService;
-
 
 @RestController
 @RequestMapping("/Customer")
@@ -32,26 +32,35 @@ public class CustomerController {
 				HttpStatus.OK);
 	}
 
-	@PostMapping("/sendOtp")
-	public ResponseEntity<String> sendOtpController(@RequestBody OtpDetails otpDetails) {
-		return new ResponseEntity<String>(customerService.sendOtp(otpDetails), HttpStatus.OK);
+	@PostMapping("/verifyOtp")
+	public ResponseEntity<String> verifyOtpController(@RequestBody OtpDetails otpDetails) {
+		return new ResponseEntity<String>(customerService.verifyOtp(otpDetails), HttpStatus.OK);
+	}
+
+	@PutMapping("/resendOtp/{customerPhoneNumber}/{customerSessionId}")
+	public ResponseEntity<String> resendOtpController(@PathVariable String customerPhoneNumber,
+			@PathVariable String customerSessionId) {
+		return new ResponseEntity<String>(customerService.resendOtp(customerPhoneNumber, customerSessionId),
+				HttpStatus.OK);
 	}
 
 	@PostMapping("/saveCustomerProfile")
 	public ResponseEntity<Customer> saveCustomerProfileController(@RequestBody Customer customer) {
 		return new ResponseEntity<Customer>(customerService.saveProfile(customer), HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/deleteProfile/{customerPhoneNumber}")
 	public ResponseEntity<String> deleteProfileController(@PathVariable String customerPhoneNumber) {
 		return new ResponseEntity<String>(customerService.deleteCustomer(customerPhoneNumber), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/getCustomerByCustomerPhoneNumber/{customerPhoneNumber}")
-	public ResponseEntity<Customer> getCustomerByCustomerPhoneNumberController(@PathVariable String customerPhoneNumber) {
-		return new ResponseEntity<Customer>(customerService.getCustomerByCustomerPhoneNumber(customerPhoneNumber), HttpStatus.OK);
+	public ResponseEntity<Customer> getCustomerByCustomerPhoneNumberController(
+			@PathVariable String customerPhoneNumber) {
+		return new ResponseEntity<Customer>(customerService.getCustomerByCustomerPhoneNumber(customerPhoneNumber),
+				HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/getAllCustomerDetails")
 	public ResponseEntity<List<Customer>> getAllCustomerDetailsController() {
 		return new ResponseEntity<List<Customer>>(customerService.getAllCustomerDetails(), HttpStatus.OK);

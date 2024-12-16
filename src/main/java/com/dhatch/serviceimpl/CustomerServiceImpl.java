@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
 			String customerId = String.format("%s%06d", "C", customerRespository.findAll().size() + 1);
 
 			Customer cus = new Customer();
-			cus.setCustomerId(customerId); 
+			cus.setCustomerId(customerId);
 			cus.setCustomerPhoneNumber(customerPhoneNumber);
 			cus.setCustomerSessionId(customerSessionId);
 			cus.setCustomerOtp(1234);
@@ -47,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public String sendOtp(OtpDetails otpDetails) {
+	public String verifyOtp(OtpDetails otpDetails) {
 		String status;
 		Optional<Customer> customer = customerRespository
 				.findByCustomerPhoneNumber(otpDetails.getCustomerPhoneNumber());
@@ -67,6 +67,24 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return status;
 
+	}
+
+	@Override
+	public String resendOtp(String customerPhoneNumber, String customerSessionId) {
+		Optional<Customer> customerDetails = customerRespository.findByCustomerPhoneNumber(customerPhoneNumber);
+		if (!customerDetails.isEmpty()) {
+			Customer cus = customerDetails.get();
+			if (cus.getCustomerSessionId().equals(customerSessionId)) {
+				cus.setCustomerOtp(1232);
+				customerRespository.save(cus);
+				return "OTP resend";
+			} else {
+				throw new CustomerNotFoundException("Customer SessionId not match");
+			}
+
+		} else {
+			throw new CustomerNotFoundException("Customer Details not found");
+		}
 	}
 
 	@Override
